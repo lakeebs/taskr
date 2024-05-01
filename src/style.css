@@ -70,6 +70,7 @@ html, body {
   font-family: var(--fontStack);
   height: 100vh;
   line-height: 1.61;
+  touch-action: manipulation;
 }
 
 a {
