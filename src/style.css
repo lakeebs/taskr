@@ -1,0 +1,956 @@
+:root {
+  --fontStack: -apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji', sans-serif;
+  --priority1: 233, 80, 80;
+  --priority2: 217, 136, 36;
+  --priority3: 103, 155, 219;
+  --borderRadius: 2px;
+  --sidebarWidth: 260px;
+  font-size: 16px;
+}
+
+.theme-light {
+  --accentColor: #ff3d2a;
+  --bgColor: #fff;
+  --borderColor: #efefef;
+  --buttonColor: #e3e3e3;
+  --buttonHoverColor: #f5efe9;
+  --buttonTextColor: #fff;
+  --colorScheme: light;
+  --currentButtonColor: #e9ded3;
+  --editTaskBgColor: #f1f1f1;
+  --iconColor: #80848d;
+  --inputBgColor: #fff;
+  --inputBorderColor: #ddd;
+  --inputTextColor: #484242;
+  --mainFormBgColor: #f5f5f5;
+  --projectOptionsBgColor: #e3e0e0;
+  --projectOptionsHoverColor: #dfd9d9;
+  --sidebarColor: #f9f6f3;
+  --textColor: #484242;
+  --themeIcon: url('img/light-mode.svg');
+}
+
+.theme-dark {
+  --accentColor: #ff3d2a;
+  --bgColor: #0f172a;
+  --borderColor: #2c3750;
+  --buttonColor: #0f172a;
+  --buttonHoverColor: #0f172a;
+  --buttonTextColor: #fff;
+  --colorScheme: dark;
+  --currentButtonColor: #212d4a;
+  --editTaskBgColor: #090e1a;
+  --iconColor: #80848d;
+  --inputBgColor: #161d26;
+  --inputBorderColor: #252f3c;
+  --inputTextColor: #fff;
+  --mainFormBgColor: #212d4a;
+  --projectOptionsBgColor: #334155;
+  --projectOptionsHoverColor: #2a3748;
+  --sidebarColor: #090e1a;
+  --textColor: #fff;
+  --themeIcon: url('img/dark-mode.svg');
+}
+
+::selection {
+  background-color: var(--accentColor);
+  color: #fff;
+}
+
+* {
+  box-sizing: border-box;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background: var(--bgColor);
+  color: var(--textColor);
+  font-family: var(--fontStack);
+  height: 100vh;
+  line-height: 1.61;
+}
+
+a {
+  color: var(--accentColor);
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 2.2rem;
+}
+
+h2 {
+  font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+}
+
+h3 {
+  font-size: .95rem;
+}
+
+button {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  transition: transform;
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+input, textarea, select, option {
+  background: var(--inputBgColor);
+  border: 1px solid var(--inputBorderColor);
+  border-radius: var(--borderRadius);
+  color: var(--inputTextColor);
+  color-scheme: var(--colorScheme);
+  display: block;
+  font-family: var(--fontStack);
+  font-size: .8rem;
+  margin-bottom: .5rem;
+  padding: .5rem;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+input[type=date], input::-webkit-calendar-picker-indicator, select {
+  cursor: pointer;
+}
+
+input::-webkit-datetime-edit-day-field:focus,
+input::-webkit-datetime-edit-month-field:focus,
+input::-webkit-datetime-edit-year-field:focus {
+    background-color: var(--accentColor);
+    color: var(--textColor);
+    outline: none;
+}
+
+textarea {
+  resize: vertical;
+}
+
+#container {
+  height: 100vh;
+  overflow-x: hidden;
+
+  #sidebar {
+    background: var(--sidebarColor);
+    display: grid;
+    gap: 1rem;
+    grid-template-rows: 4rem 1fr auto;
+    height: 100vh;
+    overflow-y: auto;
+    padding: .75rem;
+    position: fixed;
+    scrollbar-width: none;
+    user-select: none;
+    width: var(--sidebarWidth);
+    z-index: 2;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: none;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0);
+    }
+
+    .header {
+      align-items: center;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      padding: 0 .75rem;
+
+      .dock-sidebar {
+        border: 0;
+        fill: var(--textColor);
+        height: 24px;
+        padding: 0;
+        width: 24px;
+
+        &:hover {
+          background-color: transparent;
+        }
+      }
+    }
+
+    button {
+      background-color: transparent;
+      border-radius: var(--borderRadius);
+      color: var(--textColor);
+      font-size: .9rem;
+      padding: .5rem .75rem;
+      text-align: left;
+      transition: transform;
+      width: 100%;
+
+      &:hover {
+        background-color: var(--buttonHoverColor);
+      }
+
+      &.current {
+        background-color: var(--currentButtonColor);
+
+        .total-tasks {
+          opacity: 1 !important;
+        }
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
+
+      &.all-tasks:active, &.today-tasks:active, &.overdue-tasks:active {
+        transform: none;
+      }
+
+      &.add-task-sidebar, &.all-tasks, &.today-tasks, &.overdue-tasks, &.project {
+        align-items: center;
+        display: grid;
+        gap: 5px;
+      }
+
+      &.add-task-sidebar {
+        font-weight: 600;
+        grid-template-columns: auto 1fr;
+        padding: .5rem .3rem;
+
+        &:hover {
+          background-color: transparent;
+        }
+
+        span {
+          height: 28px;
+
+          svg {
+            fill: var(--accentColor);
+          }
+        }
+      }
+
+      &.all-tasks, &.today-tasks, &.overdue-tasks, &.project {
+        grid-template-columns: auto 1fr 20px;
+
+        span {
+          height: 20px;
+
+          svg {
+            fill: var(--iconColor);
+          }
+        }
+
+        &.current {
+          span {
+            svg {
+              fill: var(--accentColor);
+            }
+          }
+        }
+
+        .total-tasks {
+          align-content: center;
+          justify-self: center;
+          opacity: .4;
+        }
+      }
+    }
+
+    .dialog-box {
+      dialog {
+        background: transparent;
+        border: 0;
+        margin: 1rem 0;
+        position: relative;
+        width: auto;
+    
+        .buttons {
+          display: grid;
+          gap: .5rem;
+          grid-template-columns: 1fr 1fr;
+    
+          .close {
+            background-color: var(--buttonColor);
+            border: 1px solid var(--inputBorderColor);
+            text-align: center;
+          }
+    
+          .add {
+            background-color: var(--accentColor);
+            color: var(--buttonTextColor);
+            text-align: center;
+          }
+        }
+    
+        .error {
+          background-color: #ffdacf;
+          color: #6a6a6a;
+          color-scheme: var(--colorScheme);
+        }
+      }
+    }
+
+    #projects {
+      h3 {
+        padding: .75rem;
+      }
+
+      ul.projects-list {
+        li.project {
+          position: relative;
+
+          button.project {
+            input.rename-input {
+              margin-bottom: 0;
+              width: 9rem;
+            }
+
+            .project-name {
+              line-height: 20px;
+            }
+
+            .project-meta {
+              justify-self: center;
+
+              .total-tasks {
+                display: block;
+              }
+              .project-settings {
+                display: none;
+              }
+            }
+
+            &:active {
+              transform: none;
+            }
+
+            &:hover {
+              .project-meta {
+                .total-tasks {
+                  display: none;
+                }
+                .project-settings {
+                  display: block;
+                }
+              }
+            }
+          }
+
+          .project-options {
+            background-color: var(--projectOptionsBgColor);
+            border-color: var(--mainFormBgColor);
+            border-style: solid;
+            border-width: 2px 3px;
+            border-radius: var(--borderRadius);
+            position: absolute;
+            right: 0;
+            top: -65px;
+            width: min-content;
+            z-index: 1;
+
+            &::after {
+              border-left: 10px solid transparent;
+              border-top: 10px solid var(--projectOptionsBgColor);
+              bottom: -10px;
+              content: "";
+              position: absolute;
+              right: 20px;
+            }
+
+            button {
+              font-size: .8rem;
+              padding: .25rem 1rem;
+              transition: transform;
+
+              &:hover {
+                background-color: var(--projectOptionsHoverColor);
+              }
+
+              &:active {
+                transform: translateY(1px);
+              }
+            }
+          }
+        }
+      }
+
+      .add-project-container {
+        align-items: center;
+        display: grid;
+        gap: 5px;
+        grid-template-columns: auto 1fr;
+        padding: .75rem;
+
+        button.cancel-project {
+          fill: var(--accentColor);
+          height: 20px;
+          padding: 0;
+          width: 20px;
+
+          &:hover{
+            background-color: transparent;
+          }
+        }
+
+        input.new-project {
+          margin-bottom: 0;
+
+          &.error {
+            background-color: #ffdacf;
+            color: #6a6a6a;
+            color-scheme: var(--colorScheme);
+          }
+        }
+      }
+
+      .project-error {
+        background: rgba(219, 54, 54, .2);
+        border: 1px solid #b34747;
+        border-radius: var(--borderRadius);
+        font-size: .8rem;
+        padding: .5rem .75rem;
+      }
+
+      button.add-project {
+        &:hover {
+          background-color: transparent;
+          color: var(--accentColor);
+        }
+      }
+    }
+
+    .extras {
+      .reset-demo, .credits {
+        font-size: .75rem;
+        padding: .3rem .75rem;
+      }
+
+      .reset-demo {
+        &:hover {
+          background-color: transparent;
+          color: var(--accentColor);
+        }
+      }
+  
+      .credits {
+        transition: none;
+        width: max-content;
+  
+        &:hover {
+          background-color: transparent;
+        }
+  
+        &:active {
+          transform: none;
+        }
+      }
+    }
+  }
+
+  main {
+    margin: 0 auto;
+    max-width: 1000px;
+    padding: .75rem 3.25rem .75rem calc(3.25rem + var(--sidebarWidth));
+    position: relative;
+    width: 100vw;
+
+    &::before {
+      background-color: rgba(0, 0, 0, 0.5);
+      content: "";
+      height: 100vh;
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      transition: opacity .2s ease;
+      width: 100vw;
+    }
+
+    .header {
+      align-items: center;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      height: 4rem;
+      justify-content: end;
+      margin-bottom: 1rem;
+
+      button.dock-sidebar {
+        background: transparent;
+        fill: var(--textColor);
+      }
+    }
+
+    .title-bar {
+      align-items: center;
+      border-bottom: 1px solid var(--borderColor);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      padding-bottom: .5rem;
+
+      h2 {
+        span {
+          margin-left: .5rem;
+        }
+      }
+
+      button.add-task-main {
+        background: none;
+        color: var(--textColor);
+        font-size: .9rem;
+        user-select: none;
+
+        &:hover {
+          color: var(--accentColor);
+        }
+      }
+    }
+
+    .dialog-box {
+      background-color: var(--mainFormBgColor);
+
+      dialog {
+        background: transparent;
+        border-color: var(--borderColor);
+        border-style: solid;
+        border-width: 0 1px 1px 1px;
+        padding: 1rem 1rem .5rem 1rem;
+        position: relative;
+        width: auto;
+
+        form {
+          display: grid;
+          gap: .5rem;
+          grid-template-columns: 1fr 1fr;
+      
+          textarea {
+            height: 8rem;
+          }
+      
+          .buttons {
+            display: grid;
+            gap: .5rem;
+            grid-template-columns: 1fr 1fr;
+
+            button {
+              border-radius: var(--borderRadius);
+              color: var(--textColor);
+              font-size: .9rem;
+              padding: .5rem .75rem;
+              width: 100%;
+            }
+      
+            .close {
+              background-color: var(--buttonColor);
+              border: 1px solid var(--inputBorderColor);
+              text-align: center;
+            }
+      
+            .add {
+              background-color: var(--accentColor);
+              color: var(--buttonTextColor);
+              text-align: center;
+            }
+          }
+      
+          .error {
+            background-color: #ffdacf;
+            color: #6a6a6a;
+            color-scheme: var(--colorScheme);
+          }
+        }
+      }
+    }
+
+    #content {
+      .all-clear {
+        margin-top: 2rem;
+        text-align: center;
+        user-select: none;
+
+        svg {
+          fill: var(--iconColor);
+          opacity: .2;
+        }
+
+        p {
+          color: var(--iconColor);
+        }
+      }
+
+      .tasks-container {
+        .tasks-list {
+          .task-item {
+            align-items: start;
+            border-bottom: 1px solid var(--borderColor);
+            cursor: pointer;
+            display: grid;
+            gap: .8rem;
+            grid-template-columns: auto 1fr auto;
+            padding: 1rem 0;
+
+            button.delete-item {
+              background-size: 22px 22px;
+              background-position: center center;
+              border: 2px solid var(--bgColor);
+              border-radius: 50%;
+              cursor: pointer;
+              height: 22px;
+              margin-top: 2px;
+              width: 22px;
+
+              &.no-priority {
+                background-color: var(--bgColor);
+                background-image: url('img/unchecked.svg');
+              }
+
+              &.priority-1 {
+                background-color: rgba(var(--priority1), .3);
+                background-image: url('img/unchecked1.svg');
+
+                &:hover {
+                  background-image: url('img/checked1.svg');
+                }
+              }
+
+              &.priority-2 {
+                background-color: rgba(var(--priority2), .3);
+                background-image: url('img/unchecked2.svg');
+
+                &:hover {
+                  background-image: url('img/checked2.svg');
+                }
+              }
+
+              &.priority-3 {
+                background-color: rgba(var(--priority3), .3);
+                background-image: url('img/unchecked3.svg');
+
+                &:hover {
+                  background-image: url('img/checked3.svg');
+                }
+              }
+
+              &:hover {
+                background-image: url('img/checked.svg');
+              }
+            }
+
+            .task-item-data {
+              .task-name {
+                margin-bottom: .3rem;
+              }
+
+              .task-notes {
+                font-size: .85rem;
+                margin-bottom: .3rem;
+              }
+  
+              .metadata {
+                align-items: center;
+                display: grid;
+                font-size: .75rem;
+                gap: 5px;
+                grid-template-columns: auto auto 1fr;
+
+                .due-date, .location {
+                  align-items: center;
+                  color: var(--accentColor);
+                  display: grid;
+                  gap: 3px;
+                  grid-template-columns: auto 1fr;
+
+                  svg {
+                    fill: var(--iconColor);
+                    margin-left: -2px;
+                  }
+                }
+
+                .location {
+                  grid-template-columns: min-content auto;
+
+                  svg {
+                    fill: var(--iconColor);
+                  }
+
+                  button {
+                    background: transparent;
+                    color: var(--accentColor);
+                    width: fit-content;
+                  }
+                }
+              }
+            }
+
+            .task-options {
+              visibility: hidden;
+              
+              button.edit-task {
+                background: transparent;
+                transition: transform;
+
+                svg {
+                  fill: var(--iconColor);
+                }
+              }
+            }
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            &:hover {
+              .task-options {
+                visibility: visible;
+              }
+            }
+
+            &.editing {
+              background-color: var(--editTaskBgColor);
+              padding: 1rem;
+
+              .priority {
+                input.priority-option {
+                  appearance: none;
+                  background-color: var(--bgColor);
+                  background-image: url('img/unchecked.svg');
+                  background-size: 22px 22px;
+                  background-position: center center;
+                  border: 2px solid var(--editTaskBgColor);
+                  border-radius: 50%;
+                  cursor: pointer;
+                  height: 22px;
+                  width: 22px;
+
+                  &:checked {
+                    background-image: url('img/checked.svg');
+                  }
+                }
+
+                input.priority-1 {
+                  background-color: rgba(var(--priority1), .3);
+                  background-image: url('img/unchecked1.svg');
+
+                  &:checked {
+                    background-image: url('img/checked1.svg');
+                  }
+                }
+
+                input.priority-2 {
+                  background-color: rgba(var(--priority2), .3);
+                  background-image: url('img/unchecked2.svg');
+
+                  &:checked {
+                    background-image: url('img/checked2.svg');
+                  }
+                }
+
+                input.priority-3 {
+                  background-color: rgba(var(--priority3), .3);
+                  background-image: url('img/unchecked3.svg');
+
+                  &:checked {
+                    background-image: url('img/checked3.svg');
+                  }
+                }
+              }
+
+              .task-name {
+                background-color: var(--inputBgColor);
+                border: 1px solid var(--mainFormBgColor);
+                border-radius: var(--borderRadius);
+                cursor: text;
+                font-family: var(--fontStack);
+                font-size: .95rem;
+                font-weight: bold;
+                line-height: 1.61;
+                margin-bottom: .5rem;
+                padding: .5rem;
+                width: 100%;
+              }
+
+              .task-name-input {
+                cursor: text;
+                font-size: .95rem;
+                font-weight: bold;
+                line-height: 1.61;
+              }
+
+              .task-notes {
+                margin-bottom: .3rem;
+              }
+
+              .task-notes {
+                background-color: var(--inputBgColor);
+                border: 1px solid var(--mainFormBgColor);
+                border-radius: var(--borderRadius);
+                cursor: text;
+                font-family: var(--fontStack);
+                font-size: .85rem;
+                line-height: 1.61;
+                margin-bottom: .5rem;
+                padding: .5rem;
+                width: 100%;
+              }
+
+              .task-notes-input {
+                cursor: text;
+                font-size: .85rem;
+                line-height: 1.61;
+              }
+
+              .task-options {
+                visibility: visible;
+              }
+
+              p.metadata {
+                grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+
+                .due-date-input {
+                  margin-bottom: 0;
+                }
+
+                .location {
+                  color: var(--textColor) !important;
+                  margin-bottom: 0;
+                }
+
+                .cancel-edit, .save-edit {
+                  border-radius: var(--borderRadius);
+                  color: var(--textColor);
+                  font-size: .9rem;
+                  padding: .5rem .75rem;
+                }
+
+                .cancel-edit {
+                  background-color: var(--buttonColor);
+                  border: 1px solid var(--inputBorderColor);
+                }
+
+                .save-edit {
+                  background-color: var(--accentColor);
+                  color: var(--buttonTextColor);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Theme toggle */
+.switch {
+  display: inline-block;
+  height: 18px;
+  justify-self: end;
+  position: relative;
+  width: 36px;
+  
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + .slider {
+      background-color: var(--mainFormBgColor);
+    }
+    
+    &:focus + .slider {
+      box-shadow: 0 0 1px var(--mainFormBgColor);
+    }
+    
+    &:checked + .slider:before {
+      -webkit-transform: translateX(18px);
+      -ms-transform: translateX(18px);
+      transform: translateX(18px);
+    }
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--currentButtonColor);
+    -webkit-transition: .2s;
+    transition: .2s;
+
+    &:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 0;
+      bottom: 0;
+      background-color: var(--textColor);
+      -webkit-transition: .2s;
+      transition: .2s;
+    }
+
+    &.round {
+      border-radius: 34px;
+    
+      &:before {
+        border-radius: 50%;
+        content: var(--themeIcon);
+        line-height: 20px;
+        text-align: center;
+      }
+    }
+  }
+}
+
+/* Media Queries */
+@media screen and (max-width: 700px) {
+  #container {
+    #sidebar {
+      display: none;
+
+      &.open-mobile {
+        display: grid;
+
+        + main {
+          &::before {
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 1;
+          }
+
+          >.header {
+            pointer-events: none;
+          }
+        }
+      }
+    }
+    
+    main {
+      padding: .75rem 1.25rem !important;
+
+      .header {
+        button.dock-sidebar {
+          visibility: visible !important;
+        }
+      }
+
+      #content {
+        dialog {
+          form {
+            display: block !important;
+          }
+        }
+      }
+    }
+  }
+}
