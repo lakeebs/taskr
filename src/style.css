@@ -144,7 +144,7 @@ textarea {
     display: grid;
     gap: 1rem;
     grid-template-rows: 4rem 1fr auto;
-    height: 100vh;
+    height: 100%;
     overflow-y: auto;
     padding: .75rem;
     position: fixed;
