@@ -340,7 +340,7 @@ export function mainFunctions(e) {
 
   // Save task
   if (saveBtn) {
-    
+
     // Get new values
     const newTaskName = taskItem.querySelector('.task-name-input').value;
     const newTaskNotes = taskItem.querySelector('.task-notes-input').value;

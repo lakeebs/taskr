@@ -26,6 +26,27 @@ export function createProjectContent(projectName) {
     })
   });
 
+  // Check for duplicate tasks in 'projects' array
+  projects.forEach(project => {
+    const uniqueTasks = [];
+
+    project.tasks.forEach(task => {
+      // Check if the task is already in the uniqueTasks array
+      const isDuplicate = uniqueTasks.some(uniqueTask => {
+        // Compare tasks to check for duplicates
+        return uniqueTask.taskName === task.taskName && uniqueTask.dueDate === task.dueDate;
+      });
+
+      // If the task is not a duplicate, add it to the uniqueTasks array
+      if (!isDuplicate) {
+        uniqueTasks.push(task);
+      }
+    });
+
+    // Replace the tasks array of the current project with the uniqueTasks array
+    project.tasks = uniqueTasks;
+  });
+
   // Create the list and list items
   const tasksList = document.createElement('ul');
   const projectSlug = projectName.toLowerCase().replace(/\s/g, "-");
@@ -33,6 +54,7 @@ export function createProjectContent(projectName) {
 
   // Loop through each task
   project.tasks.forEach((task, index) => {
+
     const taskItem = document.createElement('li');
     taskItem.classList.add('task-item');
 
