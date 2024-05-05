@@ -26,7 +26,7 @@ export function createProjectContent(projectName) {
     })
   });
 
-  // Check for duplicate tasks in 'projects' array
+  // Check for duplicate tasks in 'projects' array (without this code, the projects duplicate for some reason after editing/saving)
   projects.forEach(project => {
     const uniqueTasks = [];
 
