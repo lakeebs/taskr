@@ -1,2 +1,2 @@
 # Taskr
-A simple todo list app
+A simple todo list
